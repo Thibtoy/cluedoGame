@@ -5,8 +5,8 @@ const game = new Game();
 game.method.loadMapAndData();
 game.method.setRoomIndex();
 game.method.setPlayers();
-game.initGame();
-game.cardDistribution();
+game.method.initGame();
+game.method.cardDistribution();
 game.method.setEvidenceList();
 
 console.log(game);
