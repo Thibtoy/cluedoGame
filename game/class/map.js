@@ -3,7 +3,7 @@ import {Tileset} from './tileset.js';
 export class Map {
 	constructor(tileset, field) {
 		this.state = {
-			tileset: new Tileset('charactersSprites/'+tileset+'.png'),
+			tileset: new Tileset('./game/assets/tilesets/'+tileset+'.png'),
 			field: field,
 			characters: new Array(),
 		}

@@ -1,24 +1,16 @@
-import {loadMapAndData} from './loadMapAndData.js';
-import {setRoomIndex} from './setRoomIndex.js';
+import {Method} from './method/method.js';
 
 export class Game {
 	constructor() {
 		this.state = {
 			library: new Array(),
 			players: new Array(),
-			popUp: {
-				visibility: false,
-				list: [],
-				selected: 0,
-			},
-			roomToEnter : 0,
+			popUp: new Object(),
 			truth: new Object(),
 			turn: 0,		
-		}
+		};
+		this.method = new Method(this);
 	}
-
-	loadMapAndData = loadMapAndData.bind(this);
-	setRoomIndex = setRoomIndex.bind(this);
 
 	copyArray = array => {
 		let copy = new Array();
@@ -32,21 +24,17 @@ export class Game {
 		let state = this.state;
 		let copy = {};
 		let shuffled = new Array();
-
 		for (let type in state.cards) {
 			copy[type] = this.copyArray(state.cards[type]);
 		}
-
 		for (let type in copy) {
 			let index = Math.floor(Math.random()*copy[type].length);
 			state.truth[type] = copy[type][index];
 			copy[type].splice(index, 1);
 		}
-
 		for (let type in copy) {
 			this.randomPick(copy[type], this.state.library);
 		}
-
 		this.randomPick(state.library, shuffled);
 		this.state.library = shuffled;
 	}
@@ -79,8 +67,8 @@ export class Game {
 
 	removePopUp = () => {
 		let popUp = this.state.popUp;
-			popUp.visibility = false;			
-			popUp.selected = 0;
+			delete popUp.visibility;			
+			delete popUp.selected;
 			delete popUp.content;
 			delete popUp.list;
 	}

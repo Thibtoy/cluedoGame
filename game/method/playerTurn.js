@@ -1,17 +1,22 @@
-export function playerTurn(player, game) {
+export function playerTurn() {
+	let state = this.state;
+	let player = state.players[state.turn];
 	var selected = 0;
+	this.method.fillInfos();
 
 	var accusationList = new Array();
 
-	for (let type in game.state.cards) {
+	for (let type in player.state.evidenceList) {
 		let list = [];
-		for (let i = 0, l = game.state.cards[type].length; i < l; i++) {
-			list.push({
-				title: game.state.cards[type][i], 
-				method: () => {
-					player.state.accusation[type] = game.state.cards[type][i];
-				}
-			});
+		for (let i = 0, l = player.state.evidenceList[type].length; i < l; i++) {
+			if (player.state.evidenceList[type][i] != 1) {
+				list.push({
+					title: player.state.evidenceList[type][i].name, 
+					method: () => {
+						player.state.accusation[type] = player.state.evidenceList[type][i];
+					}
+				});
+			}
 		}
 		accusationList.push(list);
 	}
@@ -20,7 +25,7 @@ export function playerTurn(player, game) {
 		{
 			title:'Enter',
 			method: () => {
-				let room = game.state.roomIndex['room'+game.state.roomToEnter];
+				let room = this.state.roomIndex['room'+this.state.roomToEnter];
 				let placed = false;
 				selected = 0;
 				for (let i = 0, l = room.length; i < l; i++) {
@@ -46,7 +51,7 @@ export function playerTurn(player, game) {
 		{
 			title: 'Accuse',
 			method: () => {
-				let room = game.state.roomIndex['room'+game.state.roomToEnter]
+				let room = this.state.roomIndex['room'+this.state.roomToEnter]
 				let placed = false;
 				selected = 0
 				for (let i = 0, l = room.length; i < l; i++) {
@@ -65,9 +70,9 @@ export function playerTurn(player, game) {
 
 	const throwDices = event => {
 		if(event.keyCode === 13) {
-			game.removePopUp();
+			this.removePopUp();
 			player.throwDice(2);
-			game.showPopUp('Jet de dés: '+ player.state.dices[0] +', '+ player.state.dices[1]+'.');
+			this.showPopUp('Jet de dés: '+ player.state.dices[0] +', '+ player.state.dices[1]+'.');
 			window.removeEventListener('keydown', throwDices);
 			window.addEventListener('keydown', startTurn);
 		}
@@ -75,14 +80,14 @@ export function playerTurn(player, game) {
 
 	const startTurn = event => {
 		if (event.keyCode === 13) {
-			game.removePopUp();
+			this.removePopUp();
 			window.removeEventListener('keydown', startTurn);
 			window.addEventListener('keydown', mouve);
 		}
 	};
 
 	const action = (list, selection) => {
-		game.showPopUp('What do you want to do?', list, selected);
+		this.showPopUp('What do you want to do?', list, selected);
 	}
 
 	const select = (increase, list) => {
@@ -101,7 +106,7 @@ export function playerTurn(player, game) {
 		switch (event.keyCode) {
 			case 13:
 				window.removeEventListener('keydown', choice);
-				game.removePopUp();
+				this.removePopUp();
 				list[selected].method();
 				break;
 			case 37:
@@ -120,12 +125,12 @@ export function playerTurn(player, game) {
 			nextTurn();
 		}
 		else if (player.state.mouve > 0) {
-			character.mouve(event.keyCode, game.state.characterMap, game, (result, state) => {
+			character.mouve(event.keyCode, this.state.characterMap, this, (result, state) => {
 				if(result) {
 					player.state.mouve -= 1;
 					if (state != 0) {
 						window.removeEventListener('keydown', mouve);
-						game.state.roomToEnter = state;
+						this.state.roomToEnter = state;
 						action(list);
 						window.addEventListener('keydown', choice);
 					}
@@ -137,11 +142,11 @@ export function playerTurn(player, game) {
 
 	const nextTurn = () => {
 		player.state.mouve = 0;
-		game.state.turn++
-		if (game.state.turn >= game.state.players.length) game.state.turn = 0;
-		playerTurn(game.state.players[game.state.turn], game);
+		this.state.turn++
+		if (this.state.turn >= this.state.players.length) this.state.turn = 0;
+		this.method.playerTurn();
 	}
 
-	game.showPopUp('tour de' + player.state.name);
+	this.showPopUp('tour de' + player.state.name);
 	window.addEventListener('keydown', throwDices);
 };

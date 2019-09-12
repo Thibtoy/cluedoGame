@@ -1,10 +1,10 @@
-import {Map} from './map.js';
-import {handleObstacle} from './obstacle.js';
+import {Map} from '../class/map.js';
+import {handleObstacle} from '../method/obstacle.js';
 
 export function loadMapAndData() {
 	const xhr = new XMLHttpRequest();
 
-	xhr.open("GET", './data.json', false);
+	xhr.open("GET", './game/data/data.json', false);
 	xhr.send(null);
 	if(xhr.readyState != 4 || (xhr.status != 200 && xhr.status != 0)) {
 		throw new Error("Impossible de charger la carte (code HTTP : " + xhr.status + ").");

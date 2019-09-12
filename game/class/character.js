@@ -17,7 +17,7 @@ export class Character {
 			etatAnimation: -1,
 		}
 		this.image = new Image();
-		this.image.src = "charactersSprites/"+url+".png";
+		this.image.src = "./game/assets/characterSprites/"+url+".png";
 		this.image.referenceDuPerso = this;
 		this.image.onload = function() {
 			if(!this.complete) throw "Erreur de chargement du sprite Character";
